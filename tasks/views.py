@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task
 
 
-# Create your views here.
 
 # View to display all tasks
 def task_list(request):

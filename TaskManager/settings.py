@@ -55,9 +55,9 @@ ROOT_URLCONF = 'TaskManager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Add a global templates directory if needed
         'APP_DIRS': True,
-        'OPTIONS': {
+         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

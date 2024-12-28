@@ -1,0 +1,94 @@
+/* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+     color: #333;
+}
+
+/* Header Styles */
+header {
+    padding: 1rem;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header nav {
+    margin-top: 10px;
+}
+
+header nav a {
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+header nav a:hover {
+    text-decoration: underline;
+}
+
+/* Main Content Styles */
+main {
+    padding: 1rem;
+}
+
+h2 {
+    color: #116197;
+}
+
+/* Task List Styles */
+ul.body {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+ul.body li {
+    background: white;
+    margin: 0.6rem 0;
+    padding: 0.2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    grid-column: 1 / span 12;
+
+    /* Grid Layout */
+    display: grid;
+    grid-template-columns: 3fr 2fr 3fr 1fr 1fr 1fr;
+    align-items: center;
+ }
+
+ul.body li p.title {
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
+
+ul.body li a {
+    color: #116197;
+    text-decoration: none;
+    text-align: center;
+}
+
+ul.body li a:hover {
+    text-decoration: underline;
+}
+
+
+/* Footer Styles */
+footer {
+    background-color: #116197;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+

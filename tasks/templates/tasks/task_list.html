@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task List</title>
-</head>
-<body>
-    <h1>Task List</h1>
-    <a href="{% url 'task_create' %}">Create a New Task</a>
-    <ul>
-        {% for task in tasks %}
-            <li>
-                {{ task.title }} - {% if task.completed %}Completed{% else %}Not Completed{% endif %}
-                {{ task.created_at }}
-                <a href="{% url 'task_toggle_completed' task.pk %}">Toggle Completed</a> |
-                <a href="{% url 'task_update' task.pk %}">Edit</a> |
-                <a href="{% url 'task_delete' task.pk %}">Delete</a>
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends 'tasks/base.html' %}
+
+{% block title %}Task List{% endblock %}
+
+{% block content %}
+<h2>Task List</h2>
+<ul class="body">
+    {% for task in tasks %}
+        <li>
+            <!-- Title of the task -->
+            <p class="title">{{ task.title }}</p>
+            <!-- Task Status: Completed or Not Completed -->
+            <p class="status">{% if task.completed %}Completed{% else %}Not Completed{% endif %}</p>
+            <!-- Task Creation Date -->
+            <p>{{ task.created_at }}</p>
+            <!-- Action Links -->
+            <a href="{% url 'task_toggle_completed' task.pk %}">Toggle Completed</a>
+            <a href="{% url 'task_update' task.pk %}">Edit</a>
+            <a href="{% url 'task_delete' task.pk %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
