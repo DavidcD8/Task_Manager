@@ -12,6 +12,10 @@
         {% for task in tasks %}
             <li>
                 {{ task.title }} - {% if task.completed %}Completed{% else %}Not Completed{% endif %}
+                {{ task.created_at }}
+                <a href="{% url 'task_toggle_completed' task.pk %}">Toggle Completed</a> |
+                <a href="{% url 'task_update' task.pk %}">Edit</a> |
+                <a href="{% url 'task_delete' task.pk %}">Delete</a>
             </li>
         {% endfor %}
     </ul>

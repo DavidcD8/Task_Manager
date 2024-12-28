@@ -29,3 +29,20 @@ def task_update(request, pk):
         task.save()  # Save the updated task
         return redirect('task_list')  # Redirect to task list after saving
     return render(request, 'tasks/task_update.html', {'task': task})
+
+
+# Delete view
+def task_delete(request, pk):
+    task = get_object_or_404(Task, pk=pk)  # Get the task by primary key (ID)
+    if request.method == 'POST':
+        task.delete()  # Delete the task from the database
+        return redirect('task_list')  # Redirect to task list after deleting
+    return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+
+
+# View to mark as completed
+def task_toggle_completed(request, pk):
+    task = get_object_or_404(Task, pk=pk)  # Get the task by primary key (ID)
+    task.completed = not task.completed  # Toggle the completed status
+    task.save()  # Save the task
+    return redirect('task_list')  # Redirect back to task list
