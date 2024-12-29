@@ -1,9 +1,9 @@
 /* General Reset */
 body {
-    margin: 0;
     padding: 0;
+    margin: 0;
     font-family: Arial, sans-serif;
-     color: #333;
+    color: #333;
 }
 
 /* Header Styles */
@@ -86,9 +86,26 @@ footer {
     background-color: #116197;
     color: white;
     text-align: center;
-    padding: 1rem 0;
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 
+
+/*Create post*/
+#create_form {
+    display: grid;
+    align-items: center;
+    padding: 1rem;
+    max-width: 300px;
+    background-color: #C6D7E2;
+    border-radius: 0.6rem;
+}
+#description{
+    max-width: 300px;
+    min-width: 300px;
+    height: 100px;
+    resize: none;
+    border-radius: 0.6rem;
+
+}
