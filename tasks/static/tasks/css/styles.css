@@ -4,6 +4,11 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     color: #333;
+
+    /* Flexbox for sticky footer */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Header Styles */
@@ -32,6 +37,7 @@ header nav a:hover {
 
 /* Main Content Styles */
 main {
+    flex: 1; /* Pushes footer to the bottom if content is short */
     padding: 1rem;
 }
 
@@ -44,7 +50,6 @@ ul.body {
     list-style-type: none;
     padding: 0;
     margin: 0;
-
 }
 
 ul.body li {
@@ -59,7 +64,7 @@ ul.body li {
     display: grid;
     grid-template-columns: 3fr 2fr 3fr 1fr 1fr 1fr;
     align-items: center;
- }
+}
 
 ul.body li p.title {
     display: inline-block;
@@ -67,7 +72,6 @@ ul.body li p.title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-
 }
 
 ul.body li a {
@@ -80,32 +84,41 @@ ul.body li a:hover {
     text-decoration: underline;
 }
 
-
 /* Footer Styles */
 footer {
     background-color: #116197;
     color: white;
     text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    padding: 0.4rem;
+    width: 100%; /* Ensures the footer fits within the viewport width */
+    box-sizing: border-box; /* Includes padding in the total width calculation */
+    margin-top: auto; /* Keeps footer at the bottom */
 }
 
 
-/*Create post*/
+/* Create Post Form */
 #create_form {
     display: grid;
     align-items: center;
     padding: 1rem;
     max-width: 300px;
-    background-color: #C6D7E2;
-    border-radius: 0.6rem;
+    background-color: #e5e5e5;
+    border-radius: 0.3rem;
 }
-#description{
+
+#description {
     max-width: 300px;
     min-width: 300px;
     height: 100px;
     resize: none;
     border-radius: 0.6rem;
+}
 
+#update_form {
+    display: grid;
+    align-items: center;
+    padding: 1rem;
+    max-width: 300px;
+    background-color: #e5e5e5;
+    border-radius: 0.3rem;
 }

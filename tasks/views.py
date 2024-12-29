@@ -12,9 +12,17 @@ def task_list(request):
 # View to create a new task
 def task_create(request):
     if request.method == 'POST':
-        title = request.POST['title']
-        description = request.POST['description']
-        Task.objects.create(title=title, description=description)
+        title = request.POST.get('title')
+        description = request.POST.get('description', '')  # Default to an empty string if not provided
+        due_date = request.POST.get('due_date')  # Optional, can handle validation later
+
+        # Create the Task instance
+        Task.objects.create(
+            title=title,
+            description=description,
+            due_date=due_date  # Include the due_date field
+        )
+
         return redirect('task_list')  # Redirect back to task list after creation
     return render(request, 'tasks/task_create.html')
 
@@ -24,7 +32,8 @@ def task_update(request, pk):
     task = get_object_or_404(Task, pk=pk)  # Get the task by primary key (ID)
     if request.method == 'POST':
         task.title = request.POST['title']
-        task.description = request.POST['description']
+        task.description = request.POST.get('description', '')  # Use .get() to handle optional fields
+        task.due_date = request.POST['due_date']
         task.save()  # Save the updated task
         return redirect('task_list')  # Redirect to task list after saving
     return render(request, 'tasks/task_update.html', {'task': task})

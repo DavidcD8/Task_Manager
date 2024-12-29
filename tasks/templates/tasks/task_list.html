@@ -11,8 +11,7 @@
             <p class="title">{{ task.title }}</p>
             <!-- Task Status: Completed or Not Completed -->
             <p class="status">{% if task.completed %}Completed{% else %}Not Completed{% endif %}</p>
-            <!-- Task Creation Date -->
-            <p>{{ task.created_at }}</p>
+            <p>{{ task.due_date }}</p>
             <!-- Action Links -->
             <a href="{% url 'task_toggle_completed' task.pk %}">Toggle Completed</a>
             <a href="{% url 'task_update' task.pk %}">Edit</a>
