@@ -4,8 +4,15 @@ def print_menu(tasks):
     print("3: View all Tasks")
     print("4: Mark as completed")
     print("5: Remove task")
-    user_input = input("Choose an option: ")
-    process_choice(user_input, tasks)
+    
+    try:
+        user_input = int(input("Choose an option: "))  # Convert input to an integer
+        if user_input not in range(1, 6):  # Validate option
+            raise ValueError("Invalid option. Please choose a number between 1 and 5.")
+    except ValueError as e:
+        print(e)
+    else:
+        process_choice(user_input, tasks)  # Call your processing function
 
 
 def process_choice(user_input, tasks):
@@ -28,6 +35,7 @@ def process_choice(user_input, tasks):
 
 
 def add_task(tasks):
+    view_tasks(tasks)
     print("Enter a name: ")
     name = input()
     print("Enter Description: ")
