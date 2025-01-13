@@ -42,28 +42,38 @@ def add_task(tasks):
     description = input()
     task = {"name": name, "description": description, "completed": False}   # Add the task to the list of tasks
     tasks.append(task)
-    print("Added Task successfully!")  # Feedback
+    print("Task added successfully!")  # Feedback
 
 
-def edit_task(tasks):
+def edit_task(tasks): # Access the task dictionary directly and update the 'name' and 'description' field
     if not tasks:
         print("There are no tasks!")
-    else:
-        print("Choose a task: ")  # Prompts to select the task
-        task_to_be_edit = input()  # Get the task number as input
-        print("Enter a new name: ")  # Enter new name for the task
-        new_task_name = input()  # Get the new name as input
-
-        # Access the task dictionary directly and update the 'name' and 'description' field
-        current_task = tasks[int(task_to_be_edit) - 1]  # Convert to zero-based index
+    try:
+        view_tasks(tasks)
+        task_to_edit = input("Choose a task to edit by number: ") # Get the task number as input
+        if not task_to_edit.isdigit() or int(task_to_edit) < 1 or int(task_to_edit) > len(tasks):
+            raise ValueError("Invalid task number. Please enter a valid number.")
+        
+        new_task_name = input("Enter a new name: ")  # Get the new name as input
+        if not new_task_name:  # Ensure the task name is not empty.
+            raise ValueError("Task name cannot be blank.")
+         
+        current_task = tasks[int(task_to_edit) - 1]  # Convert to zero-based index
         current_task["name"] = new_task_name  # Update the task name
         print("Task name updated successfully!")  # Feedback
-        print("Enter new description: ")  # Enter new description
-        new_description = input()  # Get the new description as input
+        
+        
+        new_description = input("Enter a new description: ").strip()  # Prompt the user for a new task description and validate input.
+        if not new_description:  # Ensure the description is not empty.
+            raise ValueError("Task description cannot be blank.")
+ 
         current_task["description"] = new_description  # Update the task description
         print("Task description updated successfully!")  # Feedback
 
-
+    except ValueError as e:
+        # Handle invalid input errors and display appropriate feedback to the user.
+        print(e)
+        
 def view_tasks(tasks):
     if not tasks:
         print("No tasks available! ")
