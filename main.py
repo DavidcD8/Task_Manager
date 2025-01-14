@@ -1,127 +1,136 @@
-def print_menu(tasks):
+import sqlite3
+
+# Initialize database
+con = sqlite3.connect("task_manager.db")
+cur = con.cursor()
+
+# Create table if it doesn't exist
+cur.execute("""
+CREATE TABLE IF NOT EXISTS tasks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    completed BOOLEAN DEFAULT 0
+)
+""")
+
+con.commit()
+
+def print_menu():  # Prints menu
     print("1: Add task")
     print("2: Edit task")
     print("3: View all Tasks")
     print("4: Mark as completed")
-    print("5: Remove task")
+    print("5: Remove task\n")
 
-    try:
-        user_input = int(input("Choose an option: "))  # Convert input to an integer
-        if user_input not in range(1, 6):  # Validate option
-            raise ValueError("Invalid option. Please choose a number between 1 and 5.")
-    except ValueError as e:
-        print(e)
+    user_input = input("Choose an option: ")
+
+    if not user_input.isdigit() or int(user_input) not in range(1, 6):  # Check if input is a valid number between 1 and 5
+        print("Invalid option. Please choose a number between 1 and 5.")
     else:
-        process_choice(user_input, tasks)  # Call your processing function
+        process_choice(int(user_input))  # Pass directly to the processing function
 
 
-def process_choice(user_input, tasks):
-    if int(user_input) == 1:
+def process_choice(user_input): # process the user input and calls the appropiate function
+    if user_input == 1:
         print("\n📌 Adding a new task. Please provide the details.\n")
-        add_task(tasks)
-    elif int(user_input) == 2:
+        add_task()
+    elif user_input == 2:
         print("\n✏️ Editing an existing task. Let's update it.\n")
-        edit_task(tasks)
-    elif int(user_input) == 3:
+        edit_task()
+    elif user_input == 3:
         print("\n📋 Displaying all tasks:\n")
-        view_tasks(tasks)
-    elif int(user_input) == 4:
+        view_tasks()
+    elif user_input == 4:
         print("\n✅ Marking a task as completed. Select a task from the list.\n")
-        mark_as_completed(tasks)
-    elif int(user_input) == 5:
+        mark_as_completed()
+    elif user_input == 5:
         print("\n🗑️ Deleting a task. Choose the task to remove.\n")
-        delete_task(tasks)
+        delete_task()
 
 
-
-def add_task(tasks):
-    view_tasks(tasks)
-    print("Enter a name: ")
+def add_task():  # Adds task to database
+    print("Enter task name: ")
     name = input()
-    print("Enter Description: ")
+    print("Enter task description: ")
     description = input()
-    task = {"name": name, "description": description, "completed": False}   # Add the task to the list of tasks
-    tasks.append(task)
-    print("Task added successfully!")  # Feedback
+    cur.execute("INSERT INTO tasks (name, description) VALUES (?, ?)", (name, description)) # Insert task into the database without specifying ID
+    con.commit()
+    print("Task added successfully!")
 
 
-def edit_task(tasks): # Access the task dictionary directly and update the 'name' and 'description' field
-    if not tasks: #shows if there are no task
-        print("There are no tasks!")
-    else:
-        try:
-            view_tasks(tasks)
-            task_to_edit = input("Choose a task to edit by number: ") # Get the task number as input
-            if not task_to_edit.isdigit() or int(task_to_edit) < 1 or int(task_to_edit) > len(tasks):
-                raise ValueError("Invalid task number. Please enter a valid number.")
-
-            new_task_name = input("Enter a new name: ")  # Get the new name as input
-            if not new_task_name:  # Ensure the task name is not empty.
-                raise ValueError("Task name cannot be blank.")
-
-            current_task = tasks[int(task_to_edit) - 1]  # Convert to zero-based index
-            current_task["name"] = new_task_name  # Update the task name
-            print("Task name updated successfully!")  # Feedback
-
-
-            new_description = input("Enter a new description: ").strip()  # Prompt the user for a new task description and validate input.
-            if not new_description:  # Ensure the description is not empty.
-                raise ValueError("Task description cannot be blank.")
-
-            current_task["description"] = new_description  # Update the task description
-            print("Task description updated successfully!")  # Feedback
-
-        except ValueError as e:
-            # Handle invalid input errors and display appropriate feedback to the user.
-            print(e)
-
-def view_tasks(tasks):
-    if not tasks: #shows if there are no task
-        print("No tasks available!\n")
+def edit_task():  # Edit task in database
+    view_tasks()
+    task_id = input("Enter the task ID to edit: ").strip()
+    if not task_id.isdigit():  # Check if input is a valid number
+        print("Invalid task ID.")
         return
-    for index, task in enumerate(tasks, start=1):
-        completed_status = "Yes" if task['completed'] else "No" # conditional expression to set tasks status
-        print(f"{index}.")
-        print(f"  Title      : {task['name']}")
-        print(f"  Description: {task['description']}")
-        print(f"  Completed  : {completed_status}")
-        print("-" * 40)  # Separator for readability
+    task_id = int(task_id)
+
+    name = input("Enter new task name: ").strip()
+    description = input("Enter new task description: ").strip()
+    if name and description:
+        cur.execute("UPDATE tasks SET name = ?, description = ? WHERE id = ?", (name, description, task_id))
+        con.commit()
+        print("Task updated successfully!")
+    else:
+        print("Task name and description cannot be empty!")
 
 
-
-def mark_as_completed(tasks):
+def view_tasks():  # prints all the tasks
+    cur.execute("SELECT id, name, description, completed FROM tasks")
+    tasks = cur.fetchall()  # Returns all the tasks from the database
     if not tasks:
-        print("No tasks available to mark as completed!")
+        print("No tasks available!")
         return
-    else:
-        view_tasks(tasks)  # Display all tasks
-        print("Choose a task to mark as completed: ")
-        task_index = input()  # Get the task number
-        try:
-            tasks[int(task_index) - 1]["completed"] = True  # Update the 'completed' status to True
-            print(f"Task {task_index} marked as completed successfully!")
-        except (IndexError, ValueError):
-            print("Invalid task number. Please try again.")
+    print("\n=== Task List ===")
+    for task in tasks:
+        completed = "Yes" if task[3] else "No"  # checks if it's completed or not
+        print(f"{task[0]}:")
+        print(f"  Name       : {task[1]}")
+        print(f"  Description: {task[2]}")
+        print(f"  Completed  : {completed}")
+        print("-" * 40 + "\n")  # Separator for readability
 
 
+def mark_as_completed():  # Mark a task as completed
+    view_tasks()  # Display all tasks
+    task_id = input("Enter the task ID to mark as completed: ").strip()
 
-
-def delete_task(tasks):
-    if not tasks:  # Checks if there are tasks available
-        print("No tasks available! ")
+    if not task_id.isdigit():  # Check if input is a valid number
+        print("Invalid task ID. Please enter a valid number.")
         return
-    else:
-        view_tasks(tasks)  # Displays all tasks
-        print("Select Task to delete")  # Prompts user
-        task_to_delete = input()  # Get the task number as input
-        del tasks[int(task_to_delete) - 1]  # Deletes task from list using del
-        print("Task deleted successfully!")  # Feedback
+
+    task_id = int(task_id)
+    cur.execute("SELECT id FROM tasks WHERE id = ?", (task_id,)) # Check if the task ID exists in the database
+    task = cur.fetchone()
+
+    if task is None:  # If no task is found with the provided ID
+        print(f"No task found with ID {task_id}. Please enter a valid task ID.")
+        return
+
+
+    cur.execute("UPDATE tasks SET completed = 1 WHERE id = ?", (task_id,))
+    con.commit()
+    print("Task marked as completed!")
+
+
+def delete_task():  # Delete task from database
+    view_tasks()
+    task_id = input("Enter the task ID to delete: ").strip()
+    if not task_id.isdigit():
+        print("Invalid task ID.")
+        return
+    task_id = int(task_id)
+
+    cur.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+    con.commit()
+    print("Task deleted successfully!")
 
 
 def main():
-    tasks = []  # Use a list to store multiple tasks
     while True:
-        print_menu(tasks)
+        print_menu()
 
 
 if __name__ == '__main__':
